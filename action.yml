@@ -1,0 +1,16 @@
+name: Labels as Parameters
+description: Output labels from the pull request as parameters to be used in another job on the workflow
+runs:
+  using: 'node12'
+  main: index.js
+branding:
+  color: gray-dark
+  icon: play
+inputs:
+  separator:
+    description: The separator between the key and the value
+    required: false
+    default: =
+outputs:
+  parameters:
+    description: A key-value relation of the "labels as parameters"
