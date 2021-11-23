@@ -38,7 +38,7 @@ module.exports = (rawInput, context) => {
     }, {})
 
   if (requiredParameters.length) {
-    const requiredParametersList = parameters
+    const requiredParametersList = requiredParameters
       .map(parameter => parameter.trim())
       .filter(parameter => parameter)
 
