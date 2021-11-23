@@ -1,17 +1,12 @@
 module.exports = ({
-  parameters = [],
-  separator = '='
+  requiredParameters,
+  separator,
 }, context) => {
-  const requiredParameters = parameters
-    .map(parameter => parameter.trim())
-    .filter(parameter => parameter)
-
-  if (requiredParameters.length === 0) {
-    throw new Error("Missing input 'parameters'")
+  if (requiredParameters && typeof requiredParameters !== 'array') {
+    throw new Error('requiredParameters must be an array')
   }
 
   const labels = context.payload.pull_request.labels.map(label => label.name)
-  const repeatedParameters = []
 
   const labelPairs = labels
     .reduce((acc, label) => {
@@ -33,13 +28,15 @@ module.exports = ({
       return acc
     }, {})
 
-  if (repeatedParameters.length > 0) {
-    throw new Error(`Repeated parameters: ${repeatedParameters.join(', ')}`)
-  }
+  if (requiredParameters.length) {
+    const requiredParametersList = parameters
+      .map(parameter => parameter.trim())
+      .filter(parameter => parameter)
 
-  const missingParameters = requiredParameters.filter(parameter => !labelPairs[parameter])
-  if (missingParameters.length > 0) {
-    throw new Error(`Missing parameters: ${missingParameters.join(', ')}`)
+    const missingParameters = requiredParametersList.filter(parameter => !labelPairs[parameter])
+    if (missingParameters.length > 0) {
+      throw new Error(`Missing parameters: ${missingParameters.join(', ')}`)
+    }
   }
 
   return labelPairs

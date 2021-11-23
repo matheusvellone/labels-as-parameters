@@ -10,7 +10,10 @@ inputs:
   separator:
     description: The separator between the key and the value
     required: false
-    default: =
+    default: ":"
+  requiredParameters:
+    description: A list of required parameters
+    required: false
 outputs:
   parameters:
     description: A key-value relation of the "labels as parameters"
