@@ -1,5 +1,9 @@
 # Labels as parameters
 
+<p align="center">
+  <a href="https://github.com/actions/javascript-action/actions"><img alt="javscript-action status" src="https://github.com/matheusvellone/labels-as-parameters/actions/workflows/check-dist.yml/badge.svg"></a>
+</p>
+
 Use this action to use your Pull Request labels as parameters in you workflow.
 
 ## Usage
