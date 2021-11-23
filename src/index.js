@@ -9,13 +9,39 @@ const parseInputs = (inputs) => {
   }
 }
 
-module.exports = (rawInput, context) => {
+const getLabels = async (client, context) => {
+  if (context.payload.pull_request) {
+    return context.payload.pull_request.labels
+  }
+
+  if (context.payload.head_commit) {
+    const [, pullRequest] = context.payload.head_commit.message.match(/#(\d+)/)
+
+    if (!pullRequest) {
+      throw new Error('Could not find Pull Request number in commit message')
+    }
+
+    const { data } = await client.pulls.get({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: Number(pullRequest),
+    })
+
+    return data.labels
+  }
+
+  throw new Error('Could not find labels')
+}
+
+module.exports = async (rawInput, context, {
+  client,
+}) => {
   const {
     requiredParameters,
     separator,
   } = parseInputs(rawInput)
 
-  const labels = context.payload.pull_request.labels.map(label => label.name)
+  const labels = await getLabels(client, context).map(label => label.name)
 
   const labelPairs = labels
     .reduce((acc, label) => {

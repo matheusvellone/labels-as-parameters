@@ -1,9 +1,11 @@
 const { Toolkit } = require('actions-toolkit')
 const runAction = require('./src')
 
-Toolkit.run((tools) => {
+Toolkit.run(async (tools) => {
   try {
-    const labelPairs = runAction(tools.inputs, tools.context)
+    const labelPairs = await runAction(tools.inputs, tools.context, {
+      client: tools.github,
+    })
 
     // Can't this be a simple assignment?
     Object.keys(labelPairs).forEach((label) => {
@@ -12,7 +14,6 @@ Toolkit.run((tools) => {
 
     tools.exit.success('Action complete')
   } catch (error) {
-    console.error(error)
     tools.exit.failure(error.message)
   }
 })
