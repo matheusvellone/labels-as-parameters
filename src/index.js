@@ -41,7 +41,7 @@ module.exports = async (rawInput, context, {
     separator,
   } = parseInputs(rawInput)
 
-  const labels = await getLabels(client, context).map(label => label.name)
+  const labels = (await getLabels(client, context)).map(label => label.name)
 
   const labelPairs = labels
     .reduce((acc, label) => {
