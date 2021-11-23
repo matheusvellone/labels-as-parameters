@@ -1,10 +1,19 @@
-module.exports = ({
-  requiredParameters,
-  separator,
-}, context) => {
-  if (requiredParameters && typeof requiredParameters !== 'array') {
-    throw new Error('requiredParameters must be an array')
+const parseInputs = (inputs) => {
+  const requiredParameters = inputs.requiredParameters.split(',')
+    .map(parameter => parameter.trim())
+    .filter(parameter => parameter)
+
+  return {
+    separator: inputs.separator,
+    requiredParameters,
   }
+}
+
+module.exports = (rawInput, context) => {
+  const {
+    requiredParameters,
+    separator,
+  } = parseInputs(rawInput)
 
   const labels = context.payload.pull_request.labels.map(label => label.name)
 
