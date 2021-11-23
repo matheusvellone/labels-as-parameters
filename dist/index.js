@@ -18881,7 +18881,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 4351:
+/***/ 1068:
 /***/ ((module) => {
 
 const parseInputs = (inputs) => {
@@ -18901,16 +18901,18 @@ const getLabels = async (client, context) => {
   }
 
   if (context.payload.head_commit) {
-    const [, pullRequest] = context.payload.head_commit.message.match(/#(\d+)/)
+    const match = context.payload.head_commit.message.match(/#(\d+)/)
 
-    if (!pullRequest) {
+    if (!match) {
       throw new Error('Could not find Pull Request number in commit message')
     }
 
     const { data } = await client.pulls.get({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      pull_number: Number(pullRequest),
+      // If there are multiple pull requests in the commit message,
+      // we'll just use the first one.
+      pull_number: Number(match[1]),
     })
 
     return data.labels
@@ -18927,7 +18929,7 @@ module.exports = async (rawInput, context, {
     separator,
   } = parseInputs(rawInput)
 
-  const labels = await getLabels(client, context).map(label => label.name)
+  const labels = (await getLabels(client, context)).map(label => label.name)
 
   const labelPairs = labels
     .reduce((acc, label) => {
@@ -18961,6 +18963,30 @@ module.exports = async (rawInput, context, {
   }
 
   return labelPairs
+}
+
+
+/***/ }),
+
+/***/ 4351:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const runAction = __nccwpck_require__(1068)
+
+module.exports = async (tools) => {
+  try {
+    const labelPairs = await runAction(tools.inputs, tools.context, {
+      client: tools.github,
+    })
+
+    Object.keys(labelPairs).forEach((label) => {
+      tools.outputs[label] = labelPairs[label]
+    })
+
+    tools.exit.success('Action complete')
+  } catch (error) {
+    tools.exit.failure(error.message)
+  }
 }
 
 
@@ -19196,24 +19222,9 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const { Toolkit } = __nccwpck_require__(7045)
-const runAction = __nccwpck_require__(4351)
+const action = __nccwpck_require__(4351)
 
-Toolkit.run(async (tools) => {
-  try {
-    const labelPairs = await runAction(tools.inputs, tools.context, {
-      client: tools.github,
-    })
-
-    // Can't this be a simple assignment?
-    Object.keys(labelPairs).forEach((label) => {
-      tools.outputs[label] = labelPairs[label]
-    })
-
-    tools.exit.success('Action complete')
-  } catch (error) {
-    tools.exit.failure(error.message)
-  }
-})
+Toolkit.run(action)
 
 })();
 

@@ -55,7 +55,9 @@ A default message for merge, or squash, action on a Pull Request should work fin
 
 ## TODOs
 ### Project
-- Fix "Check dist" badge
+- Fix "Check dist" workflow
+- Add test badge
+- Add coverage (+ badge)
 
 ### Features
 - Parse keys with "separator" in the key

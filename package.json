@@ -4,7 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build index.js -o dist"
+    "build": "ncc build src/bin/run.js -o dist",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
     "actions-toolkit": "^6.0.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.32.0"
+    "@vercel/ncc": "^0.32.0",
+    "jest": "^27.3.1"
   }
 }
