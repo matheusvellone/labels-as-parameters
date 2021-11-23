@@ -2,7 +2,7 @@ name: Labels as Parameters
 description: Output labels from the pull request as parameters to be used in another job on the workflow
 runs:
   using: 'node12'
-  main: index.js
+  main: dist/index.js
 branding:
   color: gray-dark
   icon: play
