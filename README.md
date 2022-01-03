@@ -41,7 +41,7 @@ The action takes two optional inputs: separator and requiredParameters.
 The separator to be used to separate the key name from the value like.
 Default value is `:`.
 
-A label `environment:production` would generate the `environment` production with the `production` value.
+A label `environment:production` would generate the `environment` variable with the `production` value.
 ### requiredParameters
 A list required parameters, separated by `,`. If any of the required parameters is not found, the action will fail.
 Default value is an empty list.
